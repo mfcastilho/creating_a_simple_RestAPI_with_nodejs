@@ -1,11 +1,19 @@
 {
   "name": "iniciando_com_nodejs2022",
   "version": "1.0.0",
-  "description": "",
+  "description": "Understanding nodejs rocketseat",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Mario Frederico Castilho",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mfcastilho/creating_RestAPI_with_nodejs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mfcastilho/creating_RestAPI_with_nodejs/issues"
+  },
+  "homepage": "https://github.com/mfcastilho/creating_RestAPI_with_nodejs#readme"
 }
