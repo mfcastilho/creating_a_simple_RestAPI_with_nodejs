@@ -2,7 +2,7 @@
 
 
 
-//Importações
+//==Importações
 const express = require("express");
 const { get } = require("express/lib/response");
 const app = express();
@@ -11,10 +11,10 @@ const path = require("path");
 const {v4:makeID} = require("uuid");
 
 
-//Variáveis
+//==Variáveis
 const port = 4002;
 
-//Banco de Dados fake
+//==Banco de Dados fake
 const dataBase = require("./data-base/dataBase.json");
 
 
@@ -31,19 +31,18 @@ app.use(express.json());
 
 //==== Rotas =====
 
-//Rota da página Home
+//==Rota da página Home
 app.get("/", (req, res)=>{
   res.send("Página Home");
 });
 
-
-//Rota da página de produtos
+//==Rota da página de produtos
 app.get("/produtos", (req, res)=>{
   res.json(dataBase);
 });
 
 
-//Rota para retornar um produto
+//==Rota para retornar um produto
 app.get("/produtos/produto/:id", (req, res)=>{
 
   const {id} = req.params;
@@ -55,40 +54,39 @@ app.get("/produtos/produto/:id", (req, res)=>{
 });
 
 
-
-//Rota para cadastrar um produto
+//==Rota para cadastrar um produto
 app.post("/produtos/cadastrando", (req, res)=>{
   
-  //Fazendo a desestruturação do req.body
+  //==Fazendo a desestruturação do req.body
   const {name, price}= req.body;
  
-  //Novo produto
+  //==Novo produto
   const newProduct = {
     id:makeID(),
     name,
     price
   }
 
-  //Inserindo o novo produto no dataBse.products
+  //==Inserindo o novo produto no dataBse.products
   dataBase.products.push(newProduct);
 
-  //Convertendo para json e salvando em uma variável
+  //==Convertendo para json e salvando em uma variável
   const dbJSON = JSON.stringify(dataBase);
   console.log(dbJSON);
   
-  //Persistindo dados no banco de dados fake
+  //==Persistindo dados no banco de dados fake
   fs.writeFileSync(path.join(__dirname, "dataBase.json"),  dbJSON);
 
   return res.json(dbJSON);
 });
 
 
+//==Rota para atualizar as infod de um produto(rota parametrizada)==
 app.put("/produtos/produto/:id/editar", (req, res)=>{
 
   const {id} = req.params;
   const {name, price} = req.body;
 
-  
   const index = dataBase.products.findIndex(product=>product.id == id);
   const product = dataBase.products.find(product=>product.id == id);
 
@@ -102,13 +100,13 @@ app.put("/produtos/produto/:id/editar", (req, res)=>{
     price
   }
 
-  //Atualizando as infosd do produto no dataBase.products
+  //==Atualizando as infosd do produto no dataBase.products
   dataBase.products.splice(index, 1, updateProduct);
 
-  //Convertendo para json e salvando em uma variável
+  //==Convertendo para json e salvando em uma variável
   const dbJSON = JSON.stringify(dataBase);
 
-  //Persistindo dados no banco de dados fake
+  //==Persistindo dados no banco de dados fake
   fs.writeFileSync(path.resolve("data-base", "dataBase.json"), dbJSON);
 
   return res.json(dbJSON);
@@ -116,6 +114,24 @@ app.put("/produtos/produto/:id/editar", (req, res)=>{
 
 
 
+
+//==Rota para deletar um produto
+app.delete("/produtos/produto/:id/deletar", (req, res)=>{
+
+  const {id} = req.params;
+
+  const index = dataBase.products.findIndex(product=>product.id == id);
+  const product = dataBase.products.find(product=>product.id == id);
+
+  if(product == undefined){
+    return res.send("Produto não encontrado!");
+  }
+
+  dataBase.products.splice(index, 1);
+  fs.writeFileSync(path.resolve("data-base", "dataBase.json"), dbJSON);
+
+  return res.json({message:'produto alterado com sucesso!'});
+});
 
 
 
